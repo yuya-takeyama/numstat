@@ -15,6 +15,7 @@ import (
 const AppName = "numstat"
 
 type Options struct {
+	ShowCount   bool `short:"c" long:"count"   description:"Show count"`
 	ShowAverage bool `short:"a" long:"avg"     description:"Show average"`
 	ShowSum     bool `short:"s" long:"sum"     description:"Show sum"`
 	ShowMaximum bool `short:"x" long:"max"     description:"Show maximum"`
@@ -24,10 +25,11 @@ type Options struct {
 }
 
 func (o *Options) isAllDisabled() bool {
-	return !o.ShowAverage && !o.ShowSum && !o.ShowMaximum && !o.ShowMinimum
+	return !o.ShowCount && !o.ShowAverage && !o.ShowSum && !o.ShowMaximum && !o.ShowMinimum
 }
 
 func (o *Options) enableAll() {
+	o.ShowCount = true
 	o.ShowAverage = true
 	o.ShowSum = true
 	o.ShowMaximum = true
@@ -103,13 +105,17 @@ func numstat(r io.Reader, stdout io.Writer, stderr io.Writer, opts Options) erro
 		if opts.ShowAverage || opts.ShowSum {
 			sum += f
 		}
-		if opts.ShowAverage {
+		if opts.ShowCount || opts.ShowAverage {
 			count += 1
 		}
 	}
 
 	if opts.ShowAsJson {
 		resultJson := make(map[string]float64)
+
+		if opts.ShowCount {
+			resultJson["count"] = count
+		}
 
 		if opts.ShowMaximum {
 			resultJson["max"] = maximum
@@ -130,17 +136,21 @@ func numstat(r io.Reader, stdout io.Writer, stderr io.Writer, opts Options) erro
 			panic(encodeErr)
 		}
 	} else {
+		if opts.ShowCount {
+			fmt.Fprint(stdout, "Count:\t", count, "\n")
+		}
+
 		if opts.ShowMaximum {
-			fmt.Fprint(stdout, "Max: ", maximum, "\n")
+			fmt.Fprint(stdout, "Max:\t", maximum, "\n")
 		}
 		if opts.ShowMinimum {
-			fmt.Fprint(stdout, "Min: ", minimum, "\n")
+			fmt.Fprint(stdout, "Min:\t", minimum, "\n")
 		}
 		if opts.ShowSum {
-			fmt.Fprint(stdout, "Sum: ", sum, "\n")
+			fmt.Fprint(stdout, "Sum:\t", sum, "\n")
 		}
 		if opts.ShowAverage {
-			fmt.Fprint(stdout, "Avg: ", sum/count, "\n")
+			fmt.Fprint(stdout, "Avg:\t", sum/count, "\n")
 		}
 	}
 
