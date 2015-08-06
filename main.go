@@ -49,13 +49,13 @@ var sum float64
 var count float64
 
 func main() {
-	parser := flags.NewParser(&opts, flags.Default)
+	parser := flags.NewParser(&opts, flags.Default^flags.PrintErrors)
 	parser.Name = AppName
 	parser.Usage = "[OPTIONS] FILES..."
 
 	args, err := parser.Parse()
 	if err != nil {
-		fmt.Print(err)
+		fmt.Fprint(os.Stderr, err)
 		return
 	}
 
