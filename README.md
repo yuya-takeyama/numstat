@@ -27,17 +27,18 @@ Given following data,
 
 ```
 $ cat numbers.txt | numstat
-Max: 10
-Min: 1
-Sum: 55
-Avg: 5.5
+Count:	10
+Max:	10
+Min:	1
+Sum:	55
+Avg:	5.5
 ```
 
 ### Show as JSON
 
 ```
 $ cat numbers.txt | numstat --json
-{"avg":5.5,"max":10,"min":1,"sum":55}
+{"avg":5.5,"count":10,"max":10,"min":1,"sum":55}
 ```
 
 ## License
