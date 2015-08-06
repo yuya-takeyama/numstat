@@ -137,20 +137,20 @@ func numstat(r io.Reader, stdout io.Writer, stderr io.Writer, opts Options) erro
 		}
 	} else {
 		if opts.ShowCount {
-			fmt.Fprint(stdout, "Count:\t", count, "\n")
+			fmt.Fprint(stdout, "Count:\t", formatFloat(count), "\n")
 		}
 
 		if opts.ShowMaximum {
-			fmt.Fprint(stdout, "Max:\t", maximum, "\n")
+			fmt.Fprint(stdout, "Max:\t", formatFloat(maximum), "\n")
 		}
 		if opts.ShowMinimum {
-			fmt.Fprint(stdout, "Min:\t", minimum, "\n")
+			fmt.Fprint(stdout, "Min:\t", formatFloat(minimum), "\n")
 		}
 		if opts.ShowSum {
-			fmt.Fprint(stdout, "Sum:\t", sum, "\n")
+			fmt.Fprint(stdout, "Sum:\t", formatFloat(sum), "\n")
 		}
 		if opts.ShowAverage {
-			fmt.Fprint(stdout, "Avg:\t", sum/count, "\n")
+			fmt.Fprint(stdout, "Avg:\t", formatFloat(sum/count), "\n")
 		}
 	}
 
@@ -177,4 +177,8 @@ func feedMinimum(f float64) {
 			minimum = f
 		}
 	}
+}
+
+func formatFloat(f float64) string {
+	return strconv.FormatFloat(f, 'g', 16, 64)
 }
